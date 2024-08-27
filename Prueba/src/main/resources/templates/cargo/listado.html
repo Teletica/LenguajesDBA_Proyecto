@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/plantilla :: head}">
+    <title>Cargo</title>
+</head>
+<body>
+<header th:replace="~{layout/plantilla :: header}"/>
+
+<section th:replace="~{cargo/fragmentos :: botonesAgregar}"/>
+<section th:replace="~{cargo/fragmentos :: listadoCargo}"/>
+<section th:replace="~{cargo/fragmentos :: agregar}"/>
+
+
+<footer th:replace="~{layout/plantilla :: footer}"/>      
+</body>
+</html>

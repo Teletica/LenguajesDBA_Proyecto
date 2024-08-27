@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Apartamentos</title>
+        <script src="rutinas.js"></script>
+    </head>
+    <body>
+        <section th:fragment="listadoProductos" id="productos">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="card">
+                            <div class="card-header titulo">
+                                <h4>[[#{productos.listado}]]</h4>
+                            </div>
+                            <div th:if="${productos != null and !productos.empty}">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark titulo">
+                                    <tr>
+                                        <th>[[#{productos.productoId}]]</th>
+                                        <th>[[#{productos.nombre}]]</th>
+                                        <th>[[#{productos.precioVenta}]]</th>
+                                        <th>[[#{productos.fechaCaducidad}]]</th>
+                                        <th></th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="producto : ${productos}">
+                                        <td>[[${producto.productoId}]]</td>
+                                        <td>[[${producto.nombre}]]</td>
+                                        <td>[[${producto.precioVenta}]]</td>
+                                        <td>[[${producto.fechaCaducidad}]]</td>
+                                         <td>
+                                            <form th:action="@{/productos/delete}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este categoria?');">
+                                                <input type="hidden" name="T_PRODUCTO_ID" th:value="${producto.productoId}" />
+                                                <button type="submit" class="btn btn-danger">
+                                                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                                                </button>
+                                            </form>
+                                            <a th:href="@{/productos/modificar/}+${producto.productoId}"
+                                               class="btn btn-success">
+                                                <i class="fas fa-pencil"></i> [[#{accion.actualizar}]]
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center p-2" th:if="${productos == null or productos.empty}">
+                                <span>[[#{lista.vacia}]]</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section th:fragment="botonesAgregar" class="py-4 mb-4 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">   
+                        <button 
+                            type="button" 
+                            class="btn btn-custom btn-block" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#agregar">
+                            <i class="fas fa-plus"></i> [[#{encargado.agregar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+    <section th:fragment="agregar">
+        <div id="agregar" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header titulo">
+                        <h5 class="modal-title">[[#{encargado.agregar}]]</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div> 
+                    <form th:action="@{/productos/insert}" method="POST" class="was-validated" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="NOMBRE">NOMBRE</label>
+                                <input type="text" class="form-control" name="NOMBRE" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="PRECIO_VENTA">PRECIO_VENTA</label>
+                                <input type="number" class="form-control" name="PRECIO_VENTA" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="FECHA_CADUCIDAD">FECHA_CADUCIDAD</label>
+                                <input type="date" class="form-control" name="FECHA_CADUCIDAD" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="PROVEEDOR_ID">PROVEEDOR_ID</label>
+                                <input type="number" class="form-control" name="PROVEEDOR_ID" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="CATEGORIA_ID">CATEGORIA_ID</label>
+                                <input type="number" class="form-control" name="CATEGORIA_ID" required="true"/>
+                            </div>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-custom" type="submit">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section th:fragment="editar">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <form method="POST" th:action="@{/productos/update}" th:object="${producto}" class="was-validated">
+                    <section th:replace="~{productos/fragmentos :: botonesEditar}"/>
+                    <div id="details">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header titulo">
+                                            <h4>[[#{accion.actualizar}]]</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <label for="productoId">[[#{encargado.productoId}]]</label>
+                                                <input type="number" class="form-control" th:field="*{productoId}" readonly required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="nombre">[[#{encargado.nombre}]]</label>
+                                                <input type="text" class="form-control" th:field="*{nombre}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="precioVenta">[[#{encargado.precioVenta}]]</label>
+                                                <input type="number" class="form-control" th:field="*{precioVenta}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="fechaCaducidad">[[#{encargado.fechaCaducidad}]]</label>
+                                                <input type="date" class="form-control" th:field="*{fechaCaducidad}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="proveedor">[[#{encargado.proveedor}]]</label>
+                                                <input type="number" class="form-control" th:field="*{proveedor.proveedorId}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="categoria">[[#{encargado.categoria}]]</label>
+                                                <input type="number" class="form-control" th:field="*{categoria.categoriaId}" required="true" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+        
+        <section th:fragment="botonesEditar">
+            <div class="container py-4 mb-4 bg-light">
+                <div class="row">
+                    <div class="col-md-4 d-grid">
+                        <a th:href="@{/productos/listado}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                        </a>
+                    </div>
+                    <div class="col-md-4 d-grid">                                
+                        <a th:href="@{/productos/eliminar/}+${producto.productoId}"
+                           class="btn btn-danger">
+                            <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                        </a>
+                    </div>
+                    <div class="col-md-4 d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

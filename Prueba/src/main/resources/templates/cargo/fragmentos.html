@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="~{layout/plantilla :: head}">
+    <title>Cargo</title>
+    <script src="rutinas.js"></script>
+</head>
+<body>
+<section th:fragment="listadoCargo" id="cargo">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-11">
+                <div class="card">
+                    <div class="card-header titulo">
+                        <h4>[[#{cargo.listado}]]</h4>
+                    </div>
+                    <div th:if="${cargos != null and !cargos.empty}">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark titulo">
+                            <tr>
+                                <th>[[#{cargo.cargoId}]]</th>
+                                <th>[[#{cargo.descripcion}]]</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item : ${cargos}">
+                                <td>[[${item.cargoId}]]</td>
+                                <td>[[${item.descripcion}]]</td>
+                                <td>
+                                            <form th:action="@{/cargo/delete}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este categoria?');">
+                                                <input type="hidden" name="CARGOID" th:value="${item.cargoId}" />
+                                                <button type="submit" class="btn btn-danger">
+                                                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                                                </button>
+                                            </form>
+                                            <a th:href="@{/cargo/modificar/}+${item.cargoId}"
+                                               class="btn btn-success">
+                                                <i class="fas fa-pencil"></i> [[#{accion.actualizar}]]
+                                            </a>
+                                        </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center p-2" th:if="${cargos == null or cargos.empty}">
+                        <span>[[#{lista.vacia}]]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section th:fragment="botonesAgregar" class="py-4 mb-4 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">   
+                        <button 
+                            type="button" 
+                            class="btn btn-custom btn-block" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#agregar">
+                            <i class="fas fa-plus"></i> [[#{encargado.agregar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+    <section th:fragment="agregar">
+        <div id="agregar" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header titulo">
+                        <h5 class="modal-title">[[#{encargado.agregar}]]</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div> 
+                    <form th:action="@{/cargo/insert}" method="POST" class="was-validated" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="CARGOID">cargo Id</label>
+                                <input type="text" class="form-control" name="CARGOID" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="DESCRIPCION">descripcion</label>
+                                <input type="text" class="form-control" name="DESCRIPCION" required="true"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-custom" type="submit">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section th:fragment="editar">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <form method="POST" th:action="@{/cargo/update}" th:object="${item}" class="was-validated">
+                    <section th:replace="~{cargo/fragmentos :: botonesEditar}"/>
+                    <div id="details">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header titulo">
+                                            <h4>[[#{accion.actualizar}]]</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <label for="cargoId">[[#{cargoId}]]</label>
+                                                <input type="number" class="form-control" th:field="*{cargoId}" readonly required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="descripcion">[[#{descripcion}]]</label>
+                                                <input type="text" class="form-control" th:field="*{descripcion}" required="true" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+<section th:fragment="botonesEditar">
+    <div class="container py-4 mb-4 bg-light">
+        <div class="row">
+            <div class="col-md-4 d-grid">
+                <a th:href="@{/cargo/listado}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                </a>
+            </div>
+            <div class="col-md-4 d-grid">
+                <a th:href="@{/cargo/eliminar/}+${item.cargoId}"
+                   class="btn btn-danger">
+                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                </a>
+            </div>
+            <div class="col-md-4 d-grid">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

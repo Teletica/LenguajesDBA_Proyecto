@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/plantilla :: head}">
+    <title>Filtrado de Productos, Trabajadores y Clientes</title>
+    <link th:href="@{/css/estilos.css}" rel="stylesheet"/>
+</head>
+    <body>
+    <header th:replace="~{layout/plantilla :: header}"/>
+        
+        <div class="container">
+            
+            <h1 class="titulo">Filtrar Productos</h1>
+            <form action="/productos/filtrarPorNombre" method="GET">
+                <div class="form-group">
+                    <label for="nombre">Nombre del Producto:</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+                <button type="submit">Filtrar</button>
+            </form>
+
+            <div class="resultados card">
+                <h2>Resultados del Filtrado</h2>
+                <p th:text="${productosFiltrados}">Aquí aparecerán los resultados del filtrado de productos...</p>
+            </div>
+
+            <!-- Div para Filtrado de Trabajadores -->
+            <h1 class="titulo">Filtrar Trabajadores</h1>
+            <form action="/trabajadores/filtrarPorNombreEmpleado" method="GET">
+                <div class="form-group">
+                    <label for="nombreTrabajador">Nombre del Trabajador:</label>
+                    <input type="text" id="nombreTrabajador" name="nombre" required>
+                </div>
+                <button type="submit">Filtrar</button>
+            </form>
+
+            <div class="resultados card">
+                <h2>Resultados del Filtrado de Trabajadores</h2>
+                <p th:text="${trabajadoresFiltrados}">Aquí aparecerán los resultados del filtrado de trabajadores...</p>
+            </div>
+
+            <!-- Nuevo Div para Filtrado de Clientes -->
+            <h1 class="titulo">Filtrar Clientes</h1>
+            <form action="/clientes/filtrarPorNombreCliente" method="GET">
+                <div class="form-group">
+                    <label for="nombreCliente">Nombre del Cliente:</label>
+                    <input type="text" id="nombreCliente" name="nombre" required>
+                </div>
+                <button type="submit">Filtrar</button>
+            </form>
+
+            <div class="resultados card">
+                <h2>Resultados del Filtrado de Clientes</h2>
+                <p th:text="${clientesFiltrados}">Aquí aparecerán los resultados del filtrado de clientes...</p>
+            </div>
+       
+        </div>
+        <footer th:replace="~{layout/plantilla :: footer}"/>      
+    </body>
+</html>

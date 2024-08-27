@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="~{layout/plantilla :: head}">
+    <title>Detalles de Venta</title>
+    <script src="rutinas.js"></script>
+</head>
+<body>
+<section th:fragment="listadoDetalleVenta" id="detalleVenta">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-11">
+                <div class="card">
+                    <div class="card-header titulo">
+                        <h4>[[#{detalleVenta.listado}]]</h4>
+                    </div>
+                    <div th:if="${detalleVenta != null and !detalleVenta.empty}">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark titulo">
+                            <tr>
+                                <th>[[#{detalleVenta.ventaId}]]</th>
+                                <th>[[#{detalleVenta.productoId}]]</th>
+                                <th>[[#{detalleVenta.cantidad}]]</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="detalle : ${detalleVenta}">
+                                <td>[[${detalle.venta.ventaNumeroFactura}]]</td>
+                                <td>[[${detalle.producto.nombre}]]</td>
+                                <td>[[${detalle.cantidad}]]</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center p-2" th:if="${detalleVenta == null or detalleVenta.empty}">
+                        <span>[[#{lista.vacia}]]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <section th:fragment="botonesAgregar" class="py-4 mb-4 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">   
+                        <button 
+                            type="button" 
+                            class="btn btn-custom btn-block" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#agregarProveedor">
+                            <i class="fas fa-plus"></i> [[#{encargado.agregar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+    <section th:fragment="agregar">
+        <div id="agregarProveedor" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header titulo">
+                        <h5 class="modal-title">[[#{encargado.agregar}]]</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div> 
+                    <form th:action="@{/proveedores/insert}" method="POST" class="was-validated" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="NOMBRE">Nombre</label>
+                                <input type="text" class="form-control" name="NOMBRE" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="TELEFONO">Teléfono</label>
+                                <input type="text" class="form-control" name="TELEFONO" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="EMAIL">Email</label>
+                                <input type="email" class="form-control" name="EMAIL" required="true"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-custom" type="submit">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section th:fragment="editar">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <form method="POST" th:action="@{/proveedores/update}" th:object="${proveedor}" class="was-validated">
+                    <section th:replace="~{proveedores/fragmentos :: botonesEditar}"/>
+                    <div id="details">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header titulo">
+                                            <h4>[[#{accion.actualizar}]]</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <label for="proveedorId">[[#{encargado.proveedorId}]]</label>
+                                                <input type="text" class="form-control" th:field="*{proveedorId}" readonly required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="nombre">[[#{encargado.nombre}]]</label>
+                                                <input type="text" class="form-control" th:field="*{nombre}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="telefono">[[#{encargado.telefono}]]</label>
+                                                <input type="text" class="form-control" th:field="*{telefono}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="email">[[#{encargado.email}]]</label>
+                                                <input type="email" class="form-control" th:field="*{email}" required="true" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+<section th:fragment="botonesEditar">
+    <div class="container py-4 mb-4 bg-light">
+        <div class="row">
+            <div class="col-md-4 d-grid">
+                <a th:href="@{/detalleVenta/listado}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                </a>
+            </div>
+            <div class="col-md-4 d-grid">
+                <a th:href="@{/detalleVenta/eliminar/}+${detalle.detalleVentaId}"
+                   class="btn btn-danger">
+                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                </a>
+            </div>
+            <div class="col-md-4 d-grid">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

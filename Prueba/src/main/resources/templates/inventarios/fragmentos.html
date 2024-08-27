@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="~{layout/plantilla :: head}">
+    <title>Inventarios</title>
+    <script src="rutinas.js"></script>
+</head>
+<body>
+<section th:fragment="listadoInventarios" id="inventarios">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-11">
+                <div class="card">
+                    <div class="card-header titulo">
+                        <h4>[[#{inventarios.listado}]]</h4>
+                    </div>
+                    <div th:if="${inventarios != null and !inventarios.empty}">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark titulo">
+                            <tr>
+                                <th>[[#{inventarios.productoId}]]</th>
+                                <th>[[#{inventarios.cantidadStock}]]</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="inventario : ${inventarios}">
+                                <td>[[${inventario.producto.nombre}]]</td>
+                                <td>[[${inventario.cantidadStock}]]</td>
+                                <td>
+                                            <form th:action="@{/inventarios/delete}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este categoria?');">
+                                                <input type="hidden" name="PRODUCTO_ID" th:value="${inventario.producto.productoId}" />
+                                                <button type="submit" class="btn btn-danger">
+                                                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                                                </button>
+                                            </form>
+                                            <a th:href="@{/inventarios/modificar/}+${inventario.producto.productoId}"
+                                               class="btn btn-success">
+                                                <i class="fas fa-pencil"></i> [[#{accion.actualizar}]]
+                                            </a>
+                                        </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center p-2" th:if="${inventarios == null or inventarios.empty}">
+                        <span>[[#{lista.vacia}]]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <section th:fragment="botonesAgregar" class="py-4 mb-4 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">   
+                        <button 
+                            type="button" 
+                            class="btn btn-custom btn-block" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#agregar">
+                            <i class="fas fa-plus"></i> [[#{encargado.agregar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+    <section th:fragment="agregar">
+        <div id="agregar" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header titulo">
+                        <h5 class="modal-title">[[#{encargado.agregar}]]</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div> 
+                    <form th:action="@{/inventarios/insert}" method="POST" class="was-validated" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="PRODUCTO_ID">PRODUCTO_ID</label>
+                                <input type="text" class="form-control" name="PRODUCTO_ID" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="CANTIDAD_STOCK">CANTIDAD_STOCK</label>
+                                <input type="text" class="form-control" name="CANTIDAD_STOCK" required="true"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-custom" type="submit">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section th:fragment="editar">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <form method="POST" th:action="@{/inventarios/update}" th:object="${inventario}" class="was-validated">
+                    <section th:replace="~{inventarios/fragmentos :: botonesEditar}"/>
+                    <div id="details">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header titulo">
+                                            <h4>[[#{accion.actualizar}]]</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <label for="producto">[[#{encargado.productoID}]]</label>
+                                                <input type="number" class="form-control" th:field="*{producto.productoId}" readonly required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="cantidadStock">[[#{encargado.cantidadStock}]]</label>
+                                                <input type="number" class="form-control" th:field="*{cantidadStock}" required="true" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+<section th:fragment="botonesEditar">
+    <div class="container py-4 mb-4 bg-light">
+        <div class="row">
+            <div class="col-md-4 d-grid">
+                <a th:href="@{/inventarios/listado}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                </a>
+            </div>
+            <div class="col-md-4 d-grid">
+                <a th:href="@{/inventarios/eliminar/}+${inventario.producto.productoId}"
+                   class="btn btn-danger">
+                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                </a>
+            </div>
+            <div class="col-md-4 d-grid">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

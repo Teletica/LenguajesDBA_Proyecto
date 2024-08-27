@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:fragment="head">
+        <title>Pali</title>
+        <meta charset="UTF-8"/>
+        <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/webjars/font-awesome/css/all.css}" rel="stylesheet"/>
+        <link th:href="@{/css/estilos.css}" rel="stylesheet"/>
+        <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+        <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+        <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+        <script th:src="@{/js/rutinas.js}"></script>        
+    </head>
+    <body>
+        <header th:fragment="header" class="header text-light">
+    <nav class="navbar navbar-expand-sm p-0 titulo">
+        <div class="container">
+            <a class="navbar-brand text-custom" th:href="@{/}">[[#{aplicacion.titulo}]]</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <ul class="navbar-nav align-items-center text-light" style="margin-top: 10px; margin-bottom: 10px;">
+                    <!-- Primer grupo de 3 elementos -->
+                    <li class="nav-item px-2 dropdown">
+                        <a class="nav-link dropdown-toggle text-custom" href="#" id="navbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Sección 1
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown1">
+                            <li><a class="dropdown-item" th:href="@{/cargo/listado}">[[#{plantilla.cargo}]]</a></li>
+                            <li><a class="dropdown-item" th:href="@{/categorias/listado}">[[#{plantilla.categorias}]]</a></li>
+                            <li><a class="dropdown-item" th:href="@{/clientes/listado}">[[#{plantilla.clientes}]]</a></li>
+                        </ul>
+                    </li>
+                    <!-- Segundo grupo de 3 elementos -->
+                    <li class="nav-item px-2 dropdown">
+                        <a class="nav-link dropdown-toggle text-custom" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Sección 2
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                            <li><a class="dropdown-item" th:href="@{/compras/listado}">[[#{plantilla.compras}]]</a></li>
+                            <li><a class="dropdown-item" th:href="@{/detallecompra/listado}">[[#{plantilla.detallecompra}]]</a></li>
+                            <li><a class="dropdown-item" th:href="@{/detalleventa/listado}">[[#{plantilla.detalleventa}]]</a></li>
+                        </ul>
+                    </li>
+                    <!-- Tercer grupo de 3 elementos -->
+                    <li class="nav-item px-2 dropdown">
+                        <a class="nav-link dropdown-toggle text-custom" href="#" id="navbarDropdown3" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Sección 3
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown3">
+                            <li><a class="dropdown-item" th:href="@{/empresaencargada/listado}">[[#{plantilla.empresaencargada}]]</a></li>
+                            <li><a class="dropdown-item" th:href="@{/gafetes/listado}">[[#{plantilla.gafetes}]]</a></li>
+                            <li><a class="dropdown-item" th:href="@{/historialinventarios/listado}">[[#{plantilla.historialinventarios}]]</a></li>
+                        </ul>
+                    </li>
+                    <!-- Cuarto grupo de 3 elementos -->
+                    <li class="nav-item px-2 dropdown">
+                        <a class="nav-link dropdown-toggle text-custom" href="#" id="navbarDropdown4" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Sección 4
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown4">
+                            <li><a class="dropdown-item" th:href="@{/informesdeventa/listado}">[[#{plantilla.informesdeventa}]]</a></li>
+                            <li><a class="dropdown-item" th:href="@{/inventarios/listado}">[[#{plantilla.inventarios}]]</a></li>
+                            <li><a class="dropdown-item" th:href="@{/productos/listado}">[[#{plantilla.productos}]]</a></li>
+                        </ul>
+                    </li>
+                    <!-- Quinto grupo de 3 elementos -->
+                    <li class="nav-item px-2 dropdown">
+                        <a class="nav-link dropdown-toggle text-custom" href="#" id="navbarDropdown5" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Sección 5
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown5">
+                            <li><a class="dropdown-item" th:href="@{/proveedores/listado}">[[#{plantilla.proveedores}]]</a></li>
+                            <li><a class="dropdown-item" th:href="@{/trabajadores/listado}">[[#{plantilla.trabajadores}]]</a></li>
+                            <li><a class="dropdown-item" th:href="@{/ventas/listado}">[[#{plantilla.ventas}]]</a></li>
+                        </ul>
+                    </li>
+                    </div>
+                </div>
+            </nav>
+            <section id="main-header" class="py-2 titulo">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h1><i class="fa fa-shopping-basket"></i> [[#{plantilla.suTienda}]]</h1>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </header>  
+        <footer th:fragment="footer" class="footerAbsoluto">
+            <section class="d-flex justify-content-center justify-content-lg-between border-bottom">
+                <div class="me-5 d-none d-lg-block">
+                    <span>[[#{plantilla.redesSociales}]]</span>
+                </div>
+            </section>
+            <div class="p-footer">
+                &COPY [[#{plantilla.derechos}]]
+            </div>
+        </footer>
+    </body>
+</html>

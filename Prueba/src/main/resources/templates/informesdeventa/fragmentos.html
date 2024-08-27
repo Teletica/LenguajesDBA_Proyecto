@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="~{layout/plantilla :: head}">
+    <title>Informes de Venta</title>
+    <script src="rutinas.js"></script>
+</head>
+<body>
+<section th:fragment="listadoInformesVenta" id="informesVenta">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-11">
+                <div class="card">
+                    <div class="card-header titulo">
+                        <h4>[[#{informesVenta.listado}]]</h4>
+                    </div>
+                    <div th:if="${informesDeVenta != null and !informesDeVenta.empty}">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark titulo">
+                            <tr>
+                                <th>[[#{informesVenta.informeId}]]</th>
+                                <th>[[#{informesVenta.descripcion}]]</th>
+                                <th>[[#{informesVenta.empresaId}]]</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="informe : ${informesDeVenta}">
+                                <td>[[${informe.informeId}]]</td>
+                                <td>[[${informe.descripcion}]]</td>
+                                <td>[[${informe.empresaEncargada.nombre}]]</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center p-2" th:if="${informesDeVenta == null or informesDeVenta.empty}">
+                        <span>[[#{lista.vacia}]]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

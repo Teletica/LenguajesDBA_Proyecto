@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="~{layout/plantilla :: head}">
+    <title>Trabajadores</title>
+    <script src="rutinas.js"></script>
+</head>
+<body>
+<section th:fragment="listadoTrabajadores" id="trabajadores">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-11">
+                <div class="card">
+                    <div class="card-header titulo">
+                        <h4>[[#{trabajadores.listado}]]</h4>
+                    </div>
+                    <div th:if="${trabajadores != null and !trabajadores.empty}">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark titulo">
+                                <tr>
+                                    <th>[[#{trabajadores.cedula}]]</th>
+                                    <th>[[#{trabajadores.nombre}]]</th>
+                                    <th>[[#{trabajadores.apellido}]]</th>
+                                    <th>[[#{trabajadores.email}]]</th>
+                                    <th>[[#{trabajadores.telefono}]]</th>
+                                    <th>[[#{trabajadores.turno}]]</th>
+                                    <th>[[#{trabajadores.cargoId}]]</th>
+                                    <th>[[#{trabajadores.gafetesDeId}]]</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="trabajador : ${trabajadores}">
+                                    <td>[[${trabajador.cedula}]]</td>
+                                    <td>[[${trabajador.nombre}]]</td>
+                                    <td>[[${trabajador.apellido}]]</td>
+                                    <td>[[${trabajador.email}]]</td>
+                                    <td>[[${trabajador.telefono}]]</td>
+                                    <td>[[${trabajador.turno}]]</td>
+                                    <td>[[${trabajador.cargo.descripcion}]]</td>
+                                    <td>[[${trabajador.gafetes.descripcion}]]</td>
+                                    <td>
+                                            <form th:action="@{/trabajadores/delete}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este proveedor?');">
+                                                <input type="hidden" name="CEDULA" th:value="${trabajador.cedula}" />
+                                                <button type="submit" class="btn btn-danger">
+                                                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                                                </button>
+                                            </form>
+                                            <a th:href="@{/trabajadores/modificar/}+${trabajador.cedula}"
+                                               class="btn btn-success">
+                                                <i class="fas fa-pencil"></i> [[#{accion.actualizar}]]
+                                            </a>
+                                        </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="text-center p-2" th:if="${trabajadores == null or trabajadores.empty}">
+                        <span>[[#{lista.vacia}]]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    
+    <section th:fragment="botonesAgregar" class="py-4 mb-4 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">   
+                        <button 
+                            type="button" 
+                            class="btn btn-custom btn-block" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#agregar">
+                            <i class="fas fa-plus"></i> [[#{encargado.agregar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+    <section th:fragment="agregar">
+        <div id="agregar" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header titulo">
+                        <h5 class="modal-title">[[#{encargado.agregar}]]</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div> 
+                    <form th:action="@{/trabajadores/insert}" method="POST" class="was-validated" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="CEDULA">CEDULA</label>
+                                <input type="text" class="form-control" name="CEDULA" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="NOMBRE">NOMBRE</label>
+                                <input type="text" class="form-control" name="NOMBRE" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="APELLIDO">APELLIDO</label>
+                                <input type="text" class="form-control" name="APELLIDO" required="true"/>
+                            </div>
+                             <div class="mb-3">
+                                <label for="EMAIL">EMAIL</label>
+                                <input type="email" class="form-control" name="EMAIL" required="true"/>
+                            </div>
+                             <div class="mb-3">
+                                <label for="TELEFONO">TELEFONO</label>
+                                <input type="text" class="form-control" name="TELEFONO" required="true"/>
+                            </div>
+                             <div class="mb-3">
+                                <label for="TURNO">TURNO</label>
+                                <input type="text" class="form-control" name="TURNO" required="true"/>
+                            </div>
+                             <div class="mb-3">
+                                <label for="CARGO_ID">CARGO_ID</label>
+                                <input type="text" class="form-control" name="CARGO_ID" required="true"/>
+                            </div>
+                             <div class="mb-3">
+                                <label for="GAFETES_DE_ID">GAFETES_DE_ID</label>
+                                <input type="text" class="form-control" name="GAFETES_DE_ID" required="true"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-custom" type="submit">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section th:fragment="editar">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <form method="POST" th:action="@{/trabajadores/update}" th:object="${trabajador}" class="was-validated">
+                    <section th:replace="~{trabajadores/fragmentos :: botonesEditar}"/>
+                    <div id="details">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header titulo">
+                                            <h4>[[#{accion.actualizar}]]</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <label for="CEDULA">[[#{encargado.proveedorId}]]</label>
+                                                <input type="text" class="form-control" th:field="*{cedula}" readonly required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="NOMBRE">[[#{encargado.NOMBRE}]]</label>
+                                                <input type="text" class="form-control" th:field="*{nombre}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="APELLIDO">[[#{encargado.APELLIDO}]]</label>
+                                                <input type="text" class="form-control" th:field="*{apellido}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="EMAIL">[[#{encargado.EMAIL}]]</label>
+                                                <input type="email" class="form-control" th:field="*{email}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="TELEFONO">[[#{encargado.TELEFONO}]]</label>
+                                                <input type="text" class="form-control" th:field="*{telefono}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="TURNO">[[#{encargado.TURNO}]]</label>
+                                                <input type="text" class="form-control" th:field="*{turno}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="CARGO_ID">[[#{encargado.CARGO_ID}]]</label>
+                                                <input type="text" class="form-control" th:field="*{cargo.cargoId}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="GAFETES_DE_ID">[[#{encargado.GAFETES_DE_ID}]]</label>
+                                                <input type="text" class="form-control" th:field="*{gafetes.gafetesDeId}" required="true" />
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+
+<section th:fragment="botonesEditar">
+    <div class="container py-4 mb-4 bg-light">
+        <div class="row">
+            <div class="col-md-4 d-grid">
+                <a th:href="@{/trabajadores/listado}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                </a>
+            </div>
+            <div class="col-md-4 d-grid">
+                <a th:href="@{/trabajadores/eliminar/}+${trabajador.cedula}"
+                   class="btn btn-danger">
+                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                </a>
+            </div>
+            <div class="col-md-4 d-grid">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

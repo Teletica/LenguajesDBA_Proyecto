@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="~{layout/plantilla :: head}">
+    <title>Clientes</title>
+    <script src="rutinas.js"></script>
+</head>
+<body>
+<section th:fragment="listadoClientes" id="clientes">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-11">
+                <div class="card">
+                    <div class="card-header titulo">
+                        <h4>[[#{clientes.listado}]]</h4>
+                    </div>
+                    <div th:if="${clientes != null and !clientes.empty}">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark titulo">
+                                <tr>
+                                    <th>[[#{clientes.clienteId}]]</th>
+                                    <th>[[#{clientes.nombre}]]</th>
+                                    <th>[[#{clientes.apellido}]]</th>
+                                    <th>[[#{clientes.email}]]</th>
+                                    <th>[[#{clientes.telefono}]]</th>
+                                    <th>[[#{clientes.direccion}]]</th>
+                                    <th>[[#{clientes.fechaRegistro}]]</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="cliente : ${clientes}">
+                                    <td>[[${cliente.clienteId}]]</td>
+                                    <td>[[${cliente.nombre}]]</td>
+                                    <td>[[${cliente.apellido}]]</td>
+                                    <td>[[${cliente.email}]]</td>
+                                    <td>[[${cliente.telefono}]]</td>
+                                    <td>[[${cliente.direccion}]]</td>
+                                    <td>[[${cliente.fechaRegistro}]]</td>
+                                    <td>
+                                            <form th:action="@{/clientes/delete}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este proveedor?');">
+                                                <input type="hidden" name="CLIENTE_ID" th:value="${cliente.clienteId}" />
+                                                <button type="submit" class="btn btn-danger">
+                                                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                                                </button>
+                                            </form>
+                                            <a th:href="@{/clientes/modificar/}+${cliente.clienteId}"
+                                               class="btn btn-success">
+                                                <i class="fas fa-pencil"></i> [[#{accion.actualizar}]]
+                                            </a>
+                                        </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="text-center p-2" th:if="${clientes == null or clientes.empty}">
+                        <span>[[#{lista.vacia}]]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <section th:fragment="botonesAgregar" class="py-4 mb-4 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">   
+                        <button 
+                            type="button" 
+                            class="btn btn-custom btn-block" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#agregar">
+                            <i class="fas fa-plus"></i> [[#{encargado.agregar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+    <section th:fragment="agregar">
+        <div id="agregar" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header titulo">
+                        <h5 class="modal-title">[[#{encargado.agregar}]]</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div> 
+                    <form th:action="@{/clientes/insert}" method="POST" class="was-validated" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="CLIENTE_ID">CLIENTE_ID</label>
+                                <input type="number" class="form-control" name="CLIENTE_ID" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="NOMBRE">NOMBRE</label>
+                                <input type="text" class="form-control" name="NOMBRE" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="APELLIDO">APELLIDO</label>
+                                <input type="text" class="form-control" name="APELLIDO" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="EMAIL">EMAIL</label>
+                                <input type="email" class="form-control" name="EMAIL" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="TELEFONO">TELEFONO</label>
+                                <input type="text" class="form-control" name="TELEFONO" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="DIRECCION">DIRECCION</label>
+                                <input type="text" class="form-control" name="DIRECCION" required="true"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-custom" type="submit">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section th:fragment="editar">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <form method="POST" th:action="@{/clientes/update}" th:object="${cliente}" class="was-validated">
+                    <section th:replace="~{clientes/fragmentos :: botonesEditar}"/>
+                    <div id="details">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header titulo">
+                                            <h4>[[#{accion.actualizar}]]</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <label for="clienteId">[[#{encargado.proveedorId}]]</label>
+                                                <input type="number" class="form-control" th:field="*{clienteId}" readonly required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="nombre">[[#{encargado.nombre}]]</label>
+                                                <input type="text" class="form-control" th:field="*{nombre}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="apellido">[[#{encargado.apellido}]]</label>
+                                                <input type="text" class="form-control" th:field="*{apellido}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="email">[[#{encargado.email}]]</label>
+                                                <input type="email" class="form-control" th:field="*{email}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="telefono">[[#{encargado.telefono}]]</label>
+                                                <input type="text" class="form-control" th:field="*{telefono}" required="true" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="direccion">[[#{encargado.direccion}]]</label>
+                                                <input type="text" class="form-control" th:field="*{direccion}" required="true" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+<section th:fragment="botonesEditar">
+    <div class="container py-4 mb-4 bg-light">
+        <div class="row">
+            <div class="col-md-4 d-grid">
+                <a th:href="@{/clientes/listado}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                </a>
+            </div>
+            <div class="col-md-4 d-grid">
+                <a th:href="@{/clientes/eliminar/}+${cliente.clienteId}"
+                   class="btn btn-danger">
+                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                </a>
+            </div>
+            <div class="col-md-4 d-grid">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
